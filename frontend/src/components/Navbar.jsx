@@ -1,6 +1,6 @@
-// src/components/Navbar.jsx
 import React, { useState } from "react";
-import API from "../axios"; // ✅ use shared axios instance
+import { Link } from "react-router-dom";
+import API from "../axios";
 import "./Navbar.css";
 
 function Navbar({ onSelectCategory }) {
@@ -10,7 +10,6 @@ function Navbar({ onSelectCategory }) {
   const [noResults, setNoResults] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Fetch products dynamically for search
   const handleSearch = async (value) => {
     setInput(value);
     if (value.trim().length < 1) {
@@ -47,8 +46,8 @@ function Navbar({ onSelectCategory }) {
   return (
     <nav className="navbar">
       <div className="nav-section nav-left">
-        <a href="/">Home</a>
-        <a href="/add_product">Add Product</a>
+        <Link to="/">Home</Link>
+        <Link to="/add_product">Add Product</Link>
 
         <div className="dropdown">
           <button className="dropbtn">Categories ▾</button>
@@ -61,7 +60,7 @@ function Navbar({ onSelectCategory }) {
           </div>
         </div>
 
-        <a href="/cart">Cart</a>
+        <Link to="/cart">Cart</Link>
       </div>
 
       <div className="nav-section nav-center">
@@ -77,19 +76,17 @@ function Navbar({ onSelectCategory }) {
         />
         {showSearchResults && (
           <div className="search-results">
-            {searchResults.length > 0 ? (
-              searchResults.map((p) => (
-                <a
-                  key={p.id}
-                  href={`/product/${p.id}`}
-                  className="result-item"
-                >
-                  {p.name}
-                </a>
-              ))
-            ) : (
-              noResults && <p className="no-results">No product found</p>
-            )}
+            {searchResults.length > 0
+              ? searchResults.map((p) => (
+                  <Link
+                    key={p.id}
+                    to={`/product/${p.id}`}
+                    className="result-item"
+                  >
+                    {p.name}
+                  </Link>
+                ))
+              : noResults && <p className="no-results">No product found</p>}
           </div>
         )}
       </div>
