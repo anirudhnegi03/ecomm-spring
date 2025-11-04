@@ -60,19 +60,23 @@ public class ProductController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable int id,@RequestPart Product product,@RequestPart MultipartFile imageFile){
-        Product product1=null;
-        try {
-            product1=service.updateProduct(id,product,imageFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+  
+public ResponseEntity<String> updateProduct(
+        @PathVariable int id,
+        @RequestPart("product") Product product,
+        @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+    try {
+        Product updated = service.updateProduct(id, product, imageFile);
+        if (updated == null) {
+            return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
         }
-
-        if(product1 == null){
-            return new ResponseEntity<>("Failed to update",HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("Updated",HttpStatus.OK);
+        return new ResponseEntity<>("Updated", HttpStatus.OK);
+    } catch (IOException e) {
+        return new ResponseEntity<>("Error updating product: " + e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id){
@@ -91,4 +95,5 @@ public class ProductController {
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 }
+
 
