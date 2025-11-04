@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import API from "../axios"; // ✅ use shared axios instance
 import "./Navbar.css";
 
 function Navbar({ onSelectCategory }) {
@@ -22,9 +22,7 @@ function Navbar({ onSelectCategory }) {
 
     setShowSearchResults(true);
     try {
-      const res = await axios.get(
-        `http://localhost:8080/api/products/search?keyword=${value}`
-      );
+      const res = await API.get(`/products/search?keyword=${value}`);
       setSearchResults(res.data);
       setNoResults(res.data.length === 0);
     } catch (err) {
@@ -47,7 +45,6 @@ function Navbar({ onSelectCategory }) {
   ];
 
   return (
-    // src/components/Navbar.jsx
     <nav className="navbar">
       <div className="nav-section nav-left">
         <a href="/">Home</a>
@@ -80,17 +77,19 @@ function Navbar({ onSelectCategory }) {
         />
         {showSearchResults && (
           <div className="search-results">
-            {searchResults.length > 0
-              ? searchResults.map((p) => (
-                  <a
-                    key={p.id}
-                    href={`/product/${p.id}`}
-                    className="result-item"
-                  >
-                    {p.name}
-                  </a>
-                ))
-              : noResults && <p className="no-results">No product found</p>}
+            {searchResults.length > 0 ? (
+              searchResults.map((p) => (
+                <a
+                  key={p.id}
+                  href={`/product/${p.id}`}
+                  className="result-item"
+                >
+                  {p.name}
+                </a>
+              ))
+            ) : (
+              noResults && <p className="no-results">No product found</p>
+            )}
           </div>
         )}
       </div>
