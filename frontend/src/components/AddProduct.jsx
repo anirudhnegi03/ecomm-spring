@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../axios";
 import "./AddProduct.css";
 
 const AddProduct = () => {
@@ -34,17 +34,13 @@ const AddProduct = () => {
     );
 
     try {
-      const res = await axios.post(
-        "http://localhost:8080/api/product",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await API.post("/product", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("Product added successfully");
       console.log(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error adding product:", err);
       alert("Error adding product");
     }
   };
