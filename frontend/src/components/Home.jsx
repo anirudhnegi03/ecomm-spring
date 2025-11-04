@@ -48,8 +48,13 @@ const Home = ({ selectedCategory }) => {
 
   // Filter products by category if selected
   const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
-    : products;
+  ? products.filter(
+      (product) =>
+        product.category?.toLowerCase().trim() ===
+        selectedCategory.toLowerCase().trim()
+    )
+  : products;
+
 
   if (isError) {
     return (
