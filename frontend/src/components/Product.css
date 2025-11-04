@@ -1,3 +1,38 @@
+/* === Fix uneven Update/Delete button sizes === */
+.update-button {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* space between buttons */
+  margin-top: 20px;
+}
+
+.update-button button {
+  flex: 1; /* make both equal width */
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.update-button .btn-primary {
+  background-color: #3b82f6;
+}
+
+.update-button .btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.update-button .btn-danger {
+  background-color: #dc2626;
+}
+
+.update-button .btn-danger:hover {
+  background-color: #b91c1c;
+}
+
 .product-price {
   display: flex;
   align-items: center;
@@ -30,3 +65,4 @@
 .product-price + h6 {
   margin-top: 1rem;
 }
+
