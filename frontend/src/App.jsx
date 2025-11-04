@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { AppProvider } from "./Context/Context";
 
+// Components
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Cart from "./components/Cart";
@@ -15,12 +16,12 @@ function App() {
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // handle category selection from Navbar
+  // Handle category selection
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
 
-  // add products to cart
+  // Add product to cart
   const addToCart = (product) => {
     const existing = cart.find((item) => item.id === product.id);
 
