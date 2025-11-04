@@ -8,6 +8,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.Date;
@@ -101,28 +102,32 @@ public class DataInitializer {
     }
 
     private void addProduct(
-            String name, String description, String brand,
-            BigDecimal price, String category, boolean available,
-            int stock, String imageName, String imageType
-    ) throws IOException {
+        String name, String description, String brand,
+        BigDecimal price, String category, boolean available,
+        int stock, String imageName, String imageType
+) throws IOException {
 
-        Product p = new Product();
-        p.setName(name);
-        p.setDescription(description);
-        p.setBrand(brand);
-        p.setPrice(price);
-        p.setCategory(category);
-        p.setReleaseDate(new Date());
-        p.setProductAvailable(available);
-        p.setStockQuantity(stock);
-        p.setImageName(imageName);
-        p.setImageType(imageType);
+    Product p = new Product();
+    p.setName(name);
+    p.setDescription(description);
+    p.setBrand(brand);
+    p.setPrice(price);
+    p.setCategory(category);
+    p.setReleaseDate(new Date());
+    p.setProductAvailable(available);
+    p.setStockQuantity(stock);
+    p.setImageName(imageName);
+    p.setImageType(imageType);
 
-        // Load image from /resources/static/images
-        ClassPathResource img = new ClassPathResource("static/images/" + imageName);
-        byte[] imageBytes = Files.readAllBytes(img.getFile().toPath());
+    // Load image from /resources/static/images
+    ClassPathResource img = new ClassPathResource("static/images/" + imageName);
+    try (InputStream in = img.getInputStream()) {
+        byte[] imageBytes = in.readAllBytes();
         p.setImageDate(imageBytes);
-
-        productRepo.save(p);
     }
+
+    productRepo.save(p);
 }
+
+}
+
