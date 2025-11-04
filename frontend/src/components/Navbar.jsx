@@ -35,13 +35,12 @@ function Navbar({ onSelectCategory }) {
     navigate("/"); // ✅ ensures user is taken back to Home so filter applies
   };
 
-  const categories = [
-    "Laptop",
-    "Headphone",
-    "Mobile",
+   const categories = [
+    "Laptops",
+    "Accessories",
     "Electronics",
-    "Toys",
     "Fashion",
+    "Smartphones",
   ];
 
   return (
