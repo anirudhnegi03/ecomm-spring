@@ -1,7 +1,7 @@
 import "./Cart.css";
 import React, { useContext, useState, useEffect } from "react";
 import AppContext from "../Context/Context";
-import API from "../axios";
+import API from "../axios"; // ✅ using shared axios instance
 import CheckoutPopup from "./CheckoutPopup";
 import { Button } from "react-bootstrap";
 
@@ -9,9 +9,9 @@ const Cart = () => {
   const { cart, removeFromCart, clearCart } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [cartImage, setCartImage] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  // ✅ Fetch products + images from backend
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
       try {
@@ -25,15 +25,10 @@ const Cart = () => {
         const cartItemsWithImages = await Promise.all(
           updatedCartItems.map(async (item) => {
             try {
-              const response = await API.get(`/product/${item.id}/image`, {
+              const res = await API.get(`/product/${item.id}/image`, {
                 responseType: "blob",
               });
-              const imageFile = await converUrlToFile(
-                response.data,
-                response.data.imageName
-              );
-              setCartImage(imageFile);
-              const imageUrl = URL.createObjectURL(response.data);
+              const imageUrl = URL.createObjectURL(res.data);
               return { ...item, imageUrl };
             } catch {
               return { ...item, imageUrl: "placeholder-image-url" };
@@ -50,6 +45,7 @@ const Cart = () => {
     if (cart.length) fetchImagesAndUpdateCart();
   }, [cart]);
 
+  // ✅ Calculate total price
   useEffect(() => {
     const total = cartItems.reduce(
       (acc, item) => acc + item.price * item.quantity,
@@ -58,11 +54,7 @@ const Cart = () => {
     setTotalPrice(total);
   }, [cartItems]);
 
-  const converUrlToFile = async (blobData, fileName) => {
-    const file = new File([blobData], fileName, { type: blobData.type });
-    return file;
-  };
-
+  // ✅ Quantity handlers
   const handleIncreaseQuantity = (itemId) => {
     const newCartItems = cartItems.map((item) => {
       if (item.id === itemId) {
@@ -86,17 +78,18 @@ const Cart = () => {
     setCartItems(newCartItems);
   };
 
+  // ✅ Remove from cart
   const handleRemoveFromCart = (itemId) => {
     removeFromCart(itemId);
     const newCartItems = cartItems.filter((item) => item.id !== itemId);
     setCartItems(newCartItems);
   };
 
+  // ✅ Checkout handler
   const handleCheckout = async () => {
     try {
       for (const item of cartItems) {
-        const { imageUrl, imageName, imageData, imageType, quantity, ...rest } =
-          item;
+        const { imageUrl, quantity, ...rest } = item;
         const updatedStockQuantity = item.stockQuantity - item.quantity;
 
         const updatedProductData = {
@@ -104,31 +97,26 @@ const Cart = () => {
           stockQuantity: updatedStockQuantity,
         };
 
-        const cartProduct = new FormData();
-        cartProduct.append("imageFile", cartImage);
-        cartProduct.append(
+        const formData = new FormData();
+        formData.append(
           "product",
           new Blob([JSON.stringify(updatedProductData)], {
             type: "application/json",
           })
         );
 
-        await API.put(`/product/${item.id}`, cartProduct, {
+        await API.put(`/product/${item.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
-        })
-          .then(() => {
-            console.log("Product updated successfully");
-          })
-          .catch((error) => {
-            console.error("Error updating product:", error);
-          });
+        });
       }
 
       clearCart();
       setCartItems([]);
       setShowModal(false);
+      alert("Checkout successful!");
     } catch (error) {
-      console.log("Error during checkout", error);
+      console.log("Error during checkout:", error);
+      alert("Something went wrong during checkout.");
     }
   };
 
@@ -136,6 +124,7 @@ const Cart = () => {
     <div className="cart-container">
       <div className="shopping-cart">
         <div className="title">Shopping Bag</div>
+
         {cartItems.length === 0 ? (
           <div className="empty" style={{ textAlign: "left", padding: "2rem" }}>
             <h4>Your cart is empty</h4>
@@ -146,8 +135,7 @@ const Cart = () => {
               <li key={item.id} className="cart-item">
                 <div
                   className="item"
-                  style={{ display: "flex", alignContent: "center" }}
-                  key={item.id}
+                  style={{ display: "flex", alignItems: "center" }}
                 >
                   <div>
                     <img
