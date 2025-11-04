@@ -1,17 +1,17 @@
+# Use Eclipse Temurin JDK 17 (stable)
 FROM eclipse-temurin:17-jdk-jammy
-
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy everything
 COPY . .
 
-# Build the app (skip tests)
+# Give execute permission to mvnw
+RUN chmod +x mvnw
+
+# Build the app
 RUN ./mvnw clean package -DskipTests
 
-# Expose port 8080
-EXPOSE 8080
-
-# Run the JAR
+# Run the jar
 CMD ["java", "-jar", "target/ecom-proj-0.0.1-SNAPSHOT.jar"]
