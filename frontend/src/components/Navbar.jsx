@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../axios";
 import "./Navbar.css";
 
 function Navbar({ onSelectCategory }) {
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSearch = async (value) => {
     setInput(value);
@@ -30,8 +31,8 @@ function Navbar({ onSelectCategory }) {
   };
 
   const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
     onSelectCategory(category);
+    navigate("/"); // ✅ ensures user is taken back to Home so filter applies
   };
 
   const categories = [
@@ -76,17 +77,15 @@ function Navbar({ onSelectCategory }) {
         />
         {showSearchResults && (
           <div className="search-results">
-            {searchResults.length > 0
-              ? searchResults.map((p) => (
-                  <Link
-                    key={p.id}
-                    to={`/product/${p.id}`}
-                    className="result-item"
-                  >
-                    {p.name}
-                  </Link>
-                ))
-              : noResults && <p className="no-results">No product found</p>}
+            {searchResults.length > 0 ? (
+              searchResults.map((p) => (
+                <Link key={p.id} to={`/product/${p.id}`} className="result-item">
+                  {p.name}
+                </Link>
+              ))
+            ) : (
+              noResults && <p className="no-results">No product found</p>
+            )}
           </div>
         )}
       </div>
