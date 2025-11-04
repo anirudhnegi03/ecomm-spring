@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "../axios"; // Use your configured axios instance
+import API from "../axios"; // ✅ use shared axios instance
 import "./UpdateProduct.css";
 
 const UpdateProduct = () => {
   const { id } = useParams();
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
+  const [existingImage, setExistingImage] = useState(null);
   const [product, setProduct] = useState({
     id: "",
     name: "",
@@ -19,19 +19,19 @@ const UpdateProduct = () => {
     stockQuantity: "",
   });
 
-  // Fetch product data from backend
+  // Fetch product data
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/product/${id}`);
+        const res = await API.get(`/product/${id}`);
         setProduct(res.data);
 
-        // Fetch image separately
-        const imageRes = await axios.get(`/product/${id}/image`, {
+        // fetch existing image
+        const imageRes = await API.get(`/product/${id}/image`, {
           responseType: "blob",
         });
         const imageUrl = URL.createObjectURL(imageRes.data);
-        setImagePreview(imageUrl);
+        setExistingImage(imageUrl);
       } catch (err) {
         console.error("Error fetching product:", err);
       }
@@ -39,46 +39,38 @@ const UpdateProduct = () => {
     fetchProduct();
   }, [id]);
 
-  // Handle field change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
-  // Handle image change
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+  const handleImageChange = (e) => setImage(e.target.files[0]);
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-
-    // Only append new image if user selected one
-    if (image) {
-      formData.append("imageFile", image);
-    }
-
-    formData.append(
-      "product",
-      new Blob([JSON.stringify(product)], { type: "application/json" })
-    );
-
     try {
-      const res = await axios.put(`/product/${id}`, formData, {
+      const formData = new FormData();
+
+      // If a new image is selected, append it
+      if (image) {
+        formData.append("imageFile", image);
+      }
+
+      // Always send product JSON
+      formData.append(
+        "product",
+        new Blob([JSON.stringify(product)], { type: "application/json" })
+      );
+
+      await API.put(`/product/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       alert("Product updated successfully!");
-      console.log(res.data);
     } catch (err) {
-      console.error("Error updating product:", err);
-      alert("Failed to update product.");
+      console.error("Error updating product:", err.response || err);
+      alert("Failed to update product. Check console for details.");
     }
   };
 
@@ -86,7 +78,6 @@ const UpdateProduct = () => {
     <div className="update-container">
       <h2>Update Product</h2>
       <form className="update-form" onSubmit={handleSubmit}>
-        {/* Name */}
         <div className="form-row">
           <label>Name</label>
           <input
@@ -98,7 +89,6 @@ const UpdateProduct = () => {
           />
         </div>
 
-        {/* Brand */}
         <div className="form-row">
           <label>Brand</label>
           <input
@@ -110,7 +100,6 @@ const UpdateProduct = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="form-row">
           <label>Description</label>
           <textarea
@@ -122,7 +111,6 @@ const UpdateProduct = () => {
           />
         </div>
 
-        {/* Price */}
         <div className="form-row">
           <label>Price</label>
           <input
@@ -134,7 +122,6 @@ const UpdateProduct = () => {
           />
         </div>
 
-        {/* Category */}
         <div className="form-row">
           <label>Category</label>
           <select
@@ -152,7 +139,6 @@ const UpdateProduct = () => {
           </select>
         </div>
 
-        {/* Stock Quantity */}
         <div className="form-row">
           <label>Stock Quantity</label>
           <input
@@ -164,12 +150,18 @@ const UpdateProduct = () => {
           />
         </div>
 
-        {/* Image Upload */}
         <div className="form-row">
           <label>Image</label>
-          {imagePreview && (
+          {existingImage && !image && (
             <img
-              src={imagePreview}
+              src={existingImage}
+              alt="Current"
+              className="preview-image"
+            />
+          )}
+          {image && (
+            <img
+              src={URL.createObjectURL(image)}
               alt="preview"
               className="preview-image"
             />
@@ -177,7 +169,6 @@ const UpdateProduct = () => {
           <input type="file" onChange={handleImageChange} />
         </div>
 
-        {/* Availability */}
         <div className="form-row checkbox-row">
           <label>
             <input
