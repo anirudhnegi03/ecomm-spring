@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import API from "../axios"; // ✅ use shared axios instance
+import API from "../axios"; 
 import "./UpdateProduct.css";
 
 const UpdateProduct = () => {
@@ -8,7 +8,6 @@ const UpdateProduct = () => {
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
   const [product, setProduct] = useState({
-    id: "",
     name: "",
     description: "",
     brand: "",
@@ -19,7 +18,7 @@ const UpdateProduct = () => {
     stockQuantity: "",
   });
 
-  // Fetch product data
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -39,29 +38,37 @@ const UpdateProduct = () => {
     fetchProduct();
   }, [id]);
 
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => setImage(e.target.files[0]);
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
 
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formData = new FormData();
 
-      // If a new image is selected, append it
-      if (image) {
-        formData.append("imageFile", image);
-      }
-
-      // Always send product JSON
+      // append product JSON
       formData.append(
         "product",
         new Blob([JSON.stringify(product)], { type: "application/json" })
       );
+
+      // append image only if user selected one
+      if (image) {
+        formData.append("imageFile", image);
+      }
+
+      console.log("Submitting product update:", product);
 
       await API.put(`/product/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -78,14 +85,16 @@ const UpdateProduct = () => {
     <div className="update-container">
       <h2>Update Product</h2>
       <form className="update-form" onSubmit={handleSubmit}>
+        {/* ---------- BASIC INFO ---------- */}
         <div className="form-row">
           <label>Name</label>
           <input
             type="text"
             name="name"
-            value={product.name}
+            value={product.name || ""}
             onChange={handleChange}
             placeholder="Enter product name"
+            required
           />
         </div>
 
@@ -94,9 +103,10 @@ const UpdateProduct = () => {
           <input
             type="text"
             name="brand"
-            value={product.brand}
+            value={product.brand || ""}
             onChange={handleChange}
             placeholder="Enter brand"
+            required
           />
         </div>
 
@@ -105,7 +115,7 @@ const UpdateProduct = () => {
           <textarea
             name="description"
             rows="3"
-            value={product.description}
+            value={product.description || ""}
             onChange={handleChange}
             placeholder="Enter description"
           />
@@ -116,9 +126,10 @@ const UpdateProduct = () => {
           <input
             type="number"
             name="price"
-            value={product.price}
+            value={product.price || ""}
             onChange={handleChange}
             placeholder="Enter price"
+            required
           />
         </div>
 
@@ -126,7 +137,7 @@ const UpdateProduct = () => {
           <label>Category</label>
           <select
             name="category"
-            value={product.category}
+            value={product.category || ""}
             onChange={handleChange}
           >
             <option value="">Select category</option>
@@ -144,39 +155,40 @@ const UpdateProduct = () => {
           <input
             type="number"
             name="stockQuantity"
-            value={product.stockQuantity}
+            value={product.stockQuantity || ""}
             onChange={handleChange}
             placeholder="Enter stock quantity"
           />
         </div>
 
+        {/* ---------- IMAGE SECTION ---------- */}
         <div className="form-row">
           <label>Image</label>
           {existingImage && !image && (
-            <img
-              src={existingImage}
-              alt="Current"
-              className="preview-image"
-            />
+            <img src={existingImage} alt="Current" className="preview-image" />
           )}
           {image && (
             <img
               src={URL.createObjectURL(image)}
-              alt="preview"
+              alt="Preview"
               className="preview-image"
             />
           )}
           <input type="file" onChange={handleImageChange} />
         </div>
 
+        {/* ---------- PRODUCT AVAILABILITY ---------- */}
         <div className="form-row checkbox-row">
           <label>
             <input
               type="checkbox"
               name="productAvailable"
-              checked={product.productAvailable}
+              checked={product.productAvailable || false}
               onChange={(e) =>
-                setProduct({ ...product, productAvailable: e.target.checked })
+                setProduct((prev) => ({
+                  ...prev,
+                  productAvailable: e.target.checked,
+                }))
               }
             />
             Product Available
