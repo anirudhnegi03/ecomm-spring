@@ -1,0 +1,32 @@
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* space between price and button */
+  margin-bottom: 1.2rem; /* space below the row */
+  flex-wrap: wrap;
+}
+
+.product-price span {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.product-price button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.product-price button:hover {
+  background-color: #005ecb;
+}
+
+/* Adds breathing room below the price section */
+.product-price + h6 {
+  margin-top: 1rem;
+}

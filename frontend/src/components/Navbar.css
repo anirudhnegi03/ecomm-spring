@@ -1,0 +1,148 @@
+/* src/components/Navbar.css */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  padding: 0.8rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* three equal sections for left, center, right */
+.nav-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  gap: 1.5rem;
+}
+
+.nav-center {
+  justify-content: center;
+}
+
+.nav-right {
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* logo centered */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* links */
+.nav-left a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-left a:hover {
+  color: #007bff;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Dropdown container (hidden by default) */
+.dropdown-content {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  top: 2.4rem;
+  left: 0;
+  min-width: 140px;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition: all 0.25s ease; /* smooth fade + slide */
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Individual category buttons */
+.dropdown-content button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-content button:hover {
+  background: #f5f5f5;
+}
+
+/* Search */
+.navbar-right {
+  position: relative;
+}
+
+.navbar-right input {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+  outline: none;
+}
+
+.search-results {
+  position: absolute;
+  top: 2.4rem;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 220px;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.result-item {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.result-item:hover {
+  background-color: #f0f0f0;
+}
+
+.no-results {
+  padding: 0.6rem;
+  color: #888;
+  font-size: 0.9rem;
+}

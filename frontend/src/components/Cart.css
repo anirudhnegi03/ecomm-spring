@@ -1,0 +1,163 @@
+/* ------------------ CART PAGE (Final Polished) ------------------ */
+
+.cart-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding-top: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.shopping-cart {
+  width: 90%;
+  max-width: 950px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #222;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.75rem;
+}
+
+.cart-item {
+  list-style: none;
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+/* Image */
+.cart-item-image {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 1rem;
+}
+
+/* Left section: image + description */
+.item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 1rem;
+}
+
+/* Product details */
+.description {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.description span:first-child {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+.description span:last-child {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Price */
+.total-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Quantity Controls */
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.quantity button {
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.quantity button:hover {
+  background: #005ecb;
+}
+
+.quantity input {
+  width: 35px;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Remove Button */
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+  color: #d9363e;
+}
+
+/* Total and Checkout Section */
+.total {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: right;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #007bff, #2980ff);
+  border: none;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #005ecb, #2479ff);
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+  font-size: 1.1rem;
+}
