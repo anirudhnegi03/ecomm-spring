@@ -12,8 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(
+    origins = "https://ecomm-spring-xt1x.onrender.com",
+    allowedHeaders = "*",
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+)
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
 public class ProductController {
 
@@ -87,3 +91,4 @@ public class ProductController {
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 }
+
