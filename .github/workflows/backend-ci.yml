@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +21,15 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Maven
+      working-directory: ecom-proj
       run: mvn -B package --file pom.xml
 
     - name: Run Tests
+      working-directory: ecom-proj
       run: mvn test --file pom.xml
 
     - name: Archive JAR
       uses: actions/upload-artifact@v4
       with:
         name: spring-boot-backend-artifact
-        path: target/*.jar
+        path: ecom-proj/target/*.jar
